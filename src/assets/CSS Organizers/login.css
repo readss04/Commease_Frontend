@@ -1,0 +1,465 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Montserrat;
+}
+
+body {
+  background-color: #daf1de;
+}
+
+.whole-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80vh;
+}
+
+/* Wrapper for the triangles */
+.triangle-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none; /* So it won't block clicks */
+}
+
+/* Light Green Triangle */
+.triangle-light-green {
+  --r: 120px;
+  width: 880px;
+  aspect-ratio: 1 / cos(30deg);
+  --_g: calc(tan(60deg) * var(--r)) bottom var(--r), #000 98%, #0000 101%;
+  -webkit-mask: conic-gradient(
+        from -30deg at 50% calc(200% - 3 * var(--r) / 2),
+        #000 60deg,
+        #0000 0
+      )
+      0 100%/100% calc(100% - 3 * var(--r) / 2) no-repeat,
+    radial-gradient(var(--r) at 50% calc(2 * var(--r)), #000 98%, #0000 101%),
+    radial-gradient(var(--r) at left var(--_g)),
+    radial-gradient(var(--r) at right var(--_g));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: #4e653d;
+  margin-left: -62%;
+  margin-top: -23%;
+  transform: rotate(-15deg);
+  position: absolute;
+  left: 20%;
+  animation: slideinLeft 1s ease-in-out forwards;
+}
+
+@keyframes slideinLeft {
+  from {
+    opacity: 0.2;
+    transform: translateX(-150px) rotate(-15deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(-15deg);
+  }
+}
+
+/* Dark Green Triangle */
+.triangle-green {
+  --r: 120px;
+  position: absolute;
+  left: 23%;
+  top: 20%;
+  width: 870px;
+  aspect-ratio: 1 / cos(30deg);
+  --_g: calc(tan(60deg) * var(--r)) bottom var(--r), #000 98%, #0000 101%;
+  -webkit-mask: conic-gradient(
+        from -30deg at 50% calc(200% - 3 * var(--r) / 2),
+        #000 60deg,
+        #0000 0
+      )
+      0 100%/100% calc(100% - 3 * var(--r) / 2) no-repeat,
+    radial-gradient(var(--r) at 50% calc(2 * var(--r)), #000 98%, #0000 101%),
+    radial-gradient(var(--r) at left var(--_g)),
+    radial-gradient(var(--r) at right var(--_g));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: #354c2b;
+  margin-left: -64%;
+  margin-top: -40%;
+  transform: rotate(-15deg);
+  animation: slideinLeft2 1s ease-in-out forwards;
+}
+
+@keyframes slideinLeft2 {
+  from {
+    opacity: 0.2;
+    transform: translateX(-180px) rotate(-15deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(-15deg);
+  }
+}
+
+/* Image (Not Fixed) */
+img {
+  height: 500px;
+  width: 500px;
+  position: absolute;
+  top: 12%;
+  left: 13%;
+  z-index: 1;
+  animation: slideinLeftImage 1s ease-in-out forwards;
+}
+
+@keyframes slideinLeftImage {
+  from {
+    opacity: 0.2;
+    transform: translateX(-180px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Optional: add styling for login-container here if needed */
+
+/* LOGIN PART */
+
+.login-container {
+  background-color: #f2f4ec;
+  width: 632px;
+  height: 580px;
+  margin-right: 4%;
+  margin-top: 10%;
+  text-align: center;
+  padding: 50px 30px;
+  border-radius: 15px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  scale: 0.9;
+  animation-name: slideinTopLogin;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopLogin {
+  from {
+    opacity: 0.2;
+    transform: translateY(90px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  margin-bottom: 10%;
+  font-size: 30px;
+  color: #354c2b;
+  font-weight: bold;
+  animation-name: slideinTopTitle;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopTitle {
+  from {
+    opacity: 0.2;
+    transform: translateY(85px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+  margin-left: 10%;
+  animation-name: slideinTopInput;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopInput {
+  from {
+    opacity: 0.2;
+    transform: translateY(95px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-container i {
+  position: absolute;
+  left: 10px;
+  padding-left: 20px;
+  color: black;
+}
+
+.input-container input {
+  width: 80%;
+  background-color: #d9dfcc;
+  opacity: 0.6;
+  height: 60px;
+  border: 1px solid black;
+  border-radius: 12px;
+  padding-left: 65px;
+  color: #000000; /* ✅ PURE BLACK TEXT */
+  font-weight: bold;
+  transition: 0.15s ease-in-out outline, 0.15s ease-in-out border-color,
+    0.15s ease-in-out box-shadow;
+}
+
+input::placeholder {
+  color: #000000; /* ✅ PURE BLACK PLACEHOLDER */
+  opacity: 0.5; /* Para medyo faded ang placeholder */
+}
+
+input:focus {
+  outline: none;
+  border-color: #000000; /* ✅ PURE BLACK BORDER FOCUS */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  color: #000000; /* ✅ PURE BLACK TEXT ON FOCUS */
+}
+
+.login-btn {
+  width: 80%;
+  padding: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  height: 69px;
+  margin-left: 10%;
+  padding-left: 35%;
+  background: #435739;
+  color: #f2f4ec;
+  margin-top: 5%;
+  margin-left: 0%;
+  margin-bottom: 20px;
+  padding-left: 14px;
+  animation-name: slideinTopLogin;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopLogin {
+  from {
+    opacity: 0.2;
+    transform: translateY(105px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-btn:hover {
+  background: #f2f4ec;
+  color: #435739;
+  border: 2px solid #435739;
+}
+
+/* RESPONSIVE PART */
+@media (max-width: 1365px) {
+  .triangle-light-green {
+    margin-left: -65%;
+    margin-top: -29%;
+  }
+
+  .triangle-green {
+    margin-left: -69%;
+    margin-top: -50%;
+  }
+
+  .image {
+    position: absolute;
+    left: 18%;
+    top: 20%;
+    width: 400px;
+    height: 400px;
+  }
+}
+@media (max-width: 1279px) {
+  .triangle-fixed {
+    position: fixed;
+    top: -125%;
+    left: -8%;
+    width: 880px;
+    transform: none;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(205deg);
+  }
+
+  .triangle-light-green {
+    position: absolute;
+    top: -5%;
+    left: 10%;
+    animation: slideinLeft 1s ease-in-out forwards;
+  }
+
+  @keyframes slideinLeft {
+    from {
+      opacity: 0.2;
+      transform: translateY(-80px) rotate(20deg);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .triangle-green {
+    position: absolute;
+    left: 16%;
+    top: 19%;
+    animation: slideinLeft 1s ease-in-out forwards;
+  }
+
+  .image {
+    display: none;
+  }
+
+  .login-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-53%, -50%);
+    z-index: 1;
+    margin: 0;
+    scale: 0.8;
+    animation-name: slideinTopLogin;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes slideinTopLogin {
+    from {
+      opacity: 0.2;
+      transform: translate(-53%, -20%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-53%, -50%);
+    }
+  }
+
+  .login-btn {
+    animation-name: slideinTopLoinButton;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes slideinTopLoinButton {
+    from {
+      opacity: 0.2;
+      transform: translateY(110%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+  }
+}
+
+@media (max-width: 899px) {
+  .login-container {
+    position: fixed;
+    top: 39%;
+    left: 40%;
+    transform: translate(-53%, -50%);
+    z-index: 1;
+    margin: 0;
+    scale: 0.7;
+  }
+
+  .triangle-fixed {
+    position: fixed;
+    top: -130%;
+    left: -27%;
+    width: 880px;
+    transform: none;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(210deg);
+  }
+}
+
+@media (max-width: 650px) {
+  .login-container {
+    position: fixed;
+    top: 35%;
+    left: 35%;
+    transform: translate(-53%, -50%);
+    z-index: 1;
+    margin: 0;
+    scale: 0.65;
+  }
+
+  .triangle-fixed {
+    position: fixed;
+    top: -115%;
+    left: -55%;
+    width: 880px;
+    transform: none;
+    scale: 0.8;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(210deg);
+  }
+}
+
+@media (max-width: 515px) {
+  .login-container {
+    position: fixed;
+    top: 33%;
+    left: 26%;
+    transform: translate(-53%, -50%);
+    z-index: 1;
+    margin: 0;
+    scale: 0.6;
+  }
+
+  .triangle-fixed {
+    position: fixed;
+    top: -115%;
+    left: -75%;
+    width: 880px;
+    transform: none;
+    scale: 0.8;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(210deg);
+  }
+}

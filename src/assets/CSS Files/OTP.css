@@ -1,0 +1,571 @@
+.container-separation {
+  display: flex;
+  justify-content: space-between; /* Para nasa gitna */
+  align-items: center; /* Vertical center */
+  width: 100%;
+  height: 80vh;
+}
+
+.triangle-fixed {
+  position: fixed;
+  top: -23%;
+  left: -20%;
+  z-index: 0;
+  pointer-events: none; /* So it won't block clicks */
+}
+
+/* Light Green Triangle */
+.triangle-light-green {
+  --r: 120px; /* border radius */
+  width: 880px;
+  aspect-ratio: 1 / cos(30deg);
+  --_g: calc(tan(60deg) * var(--r)) bottom var(--r), #000 98%, #0000 101%;
+  -webkit-mask: conic-gradient(
+        from -30deg at 50% calc(200% - 3 * var(--r) / 2),
+        #000 60deg,
+        #0000 0
+      )
+      0 100%/100% calc(100% - 3 * var(--r) / 2) no-repeat,
+    radial-gradient(var(--r) at 50% calc(2 * var(--r)), #000 98%, #0000 101%),
+    radial-gradient(var(--r) at left var(--_g)),
+    radial-gradient(var(--r) at right var(--_g));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: #4e653d;
+  margin-left: -23%;
+  margin-top: -3%;
+  transform: rotate(-15deg);
+  position: relative;
+  left: 20%;
+  top: 33%;
+  animation: slideinLeft 1s ease-in-out forwards;
+}
+
+@keyframes slideinLeft {
+  from {
+    opacity: 0.2;
+    transform: translateX(-150px) rotate(-15deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(-15deg);
+  }
+}
+
+.triangle-green {
+  --r: 120px; /* border radius */
+  position: absolute;
+  left: 23%;
+  top: 20%;
+  width: 870px;
+  aspect-ratio: 1 / cos(30deg);
+  --_g: calc(tan(60deg) * var(--r)) bottom var(--r), #000 98%, #0000 101%;
+  -webkit-mask: conic-gradient(
+        from -30deg at 50% calc(200% - 3 * var(--r) / 2),
+        #000 60deg,
+        #0000 0
+      )
+      0 100%/100% calc(100% - 3 * var(--r) / 2) no-repeat,
+    radial-gradient(var(--r) at 50% calc(2 * var(--r)), #000 98%, #0000 101%),
+    radial-gradient(var(--r) at left var(--_g)),
+    radial-gradient(var(--r) at right var(--_g));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: #354c2b;
+  margin-left: -25%;
+  margin-top: -16%;
+  transform: rotate(-15deg);
+  animation: slideinLeft2 1s ease-in-out forwards;
+}
+
+@keyframes slideinLeft2 {
+  from {
+    opacity: 0.2;
+    transform: translateX(-180px) rotate(-15deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(-15deg);
+  }
+}
+
+img {
+  height: 500px;
+  width: 500px;
+  position: absolute;
+  top: 12%;
+  left: 13%;
+  animation: slideinLeftImage 1s ease-in-out forwards;
+}
+
+@keyframes slideinLeftImage {
+  from {
+    opacity: 0.2;
+    transform: translateX(-180px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* OTP PART */
+
+.OTP-container {
+  background-color: #f2f4ec;
+  width: 632px;
+  height: 545px;
+  margin-right: 5%;
+  margin-top: 5%;
+  text-align: center;
+  padding: 50px 30px;
+  border-radius: 15px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  scale: 0.9;
+  animation-name: slideinTopLogin;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopLogin {
+  from {
+    opacity: 0.2;
+    transform: translateY(90px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.OTP-title {
+  margin-top: 5%;
+  font-size: 30px;
+  color: #354c2b;
+  margin-bottom: 13px;
+  animation-name: slideinTopTitle;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopTitle {
+  from {
+    opacity: 0.2;
+    transform: translateY(85px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.OTP-sentence {
+  color: #354c2b;
+  font-size: 16px;
+  margin-bottom: 20px;
+  animation-name: slideinTopTitle;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopTitle {
+  from {
+    opacity: 0.2;
+    transform: translateY(92px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.OTP-input-separation {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 18%;
+}
+
+.input-otp {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  border-style: none;
+  font-size: 20px;
+  text-align: center;
+  transition: 0.15s ease-in-out outline, 0.15s ease-in-out border-color,
+    0.15s ease-in-out box-shadow;
+  padding: 5px 10px;
+  border: 1px solid #a1a1a1;
+  /* REMOVE SPINNERS */
+  -moz-appearance: textfield;
+  appearance: textfield;
+  animation-name: slideinTopInput;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopInput {
+  from {
+    opacity: 0.2;
+    transform: translateY(110px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-otp::-webkit-outer-spin-button,
+.input-otp::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-otp:hover {
+  outline: none;
+  border-color: #d9dfcc;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.input-otp:focus {
+  border-color: #435739;
+}
+
+.OTP-submit {
+  width: 100px;
+  height: 60px;
+  margin-top: 10%;
+  font-size: 16px;
+  border-radius: 5px;
+  border-style: none;
+  background-color: #435739;
+  color: #f2f4ec;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.15s ease-in-out background-color, 0.15s ease-in-out color;
+}
+
+.OTP-submit:hover {
+  background-color: #f2f4ec;
+  color: #435739;
+  border: 1px solid #435739;
+}
+
+.OTP-submit:active {
+  opacity: 0.7;
+}
+
+.footer {
+  position: fixed;
+  bottom: 12%;
+  left: 62%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 210%;
+}
+
+.footer router-link {
+  font-size: 15px;
+  border: none;
+  background: #435739;
+  cursor: pointer;
+}
+
+a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+/* TESTING */
+
+.prev {
+  padding-left: 0px;
+}
+
+.prev,
+.next {
+  display: flex;
+  justify-content: center;
+  width: 90px;
+  height: 50px;
+  color: #f2f4ec;
+  background-color: #435739;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: 0.15s ease-in-out;
+  animation-name: slideinTopButton;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinTopButton {
+  from {
+    opacity: 0.2;
+    transform: translateY(130px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.next {
+  padding-top: 15px;
+}
+
+.prev:hover,
+.next:hover {
+  background-color: #f2f4ec;
+  border: 1px solid #435739;
+  color: #435739;
+}
+
+.prev:active,
+.next:active {
+  opacity: 0.8;
+}
+
+/* RESPONSIVE PART */
+
+@media (max-width: 1371px) {
+  .triangle-green {
+    margin-left: -30%;
+  }
+
+  .triangle-light-green {
+    margin-left: -30%;
+    margin-top: -5%;
+  }
+
+  img {
+    scale: 0.8;
+  }
+
+  .footer {
+    position: fixed;
+    left: 58%;
+    bottom: 12%;
+  }
+}
+
+@media (max-width: 1272px) {
+  img {
+    display: none;
+  }
+
+  .triangle-fixed {
+    position: fixed;
+    top: -100%;
+    left: 90%;
+    transform: none;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(85deg);
+  }
+
+  .triangle-light-green {
+    position: absolute;
+    top: -10%;
+    left: 12%;
+    transform: rotate(35deg);
+    animation: slideinLeft 1s ease-in-out forwards;
+  }
+
+  @keyframes slideinLeft {
+    from {
+      opacity: 0.2;
+      transform: translateY(-80px) rotate(20deg);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .triangle-green {
+    position: absolute;
+    top: -25%;
+    left: 15%;
+    transform: rotate(95deg);
+    animation: slideinLeft 1s ease-in-out forwards;
+  }
+
+  .OTP-container {
+    position: fixed;
+    top: 30%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    scale: 0.7;
+    animation-name: slideinTopLogin;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes slideinTopLogin {
+    from {
+      opacity: 0.2;
+      transform: translate(-53%, -20%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-53%, -50%);
+    }
+  }
+
+  /* Optional Footer (Uncomment if needed) */
+  .footer {
+    position: fixed;
+    top: 79%;
+    left: 40%;
+    column-gap: 130%;
+  }
+}
+
+@media (max-width: 926px) {
+  .triangle-fixed {
+    position: fixed;
+    top: -100%;
+    left: 110%;
+    transform: none;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(85deg);
+  }
+
+  .triangle-light-green {
+    position: absolute;
+    top: -10%;
+    left: 12%;
+    transform: rotate(35deg);
+  }
+
+  .triangle-green {
+    position: absolute;
+    top: -25%;
+    left: 15%;
+    transform: rotate(95deg);
+  }
+
+  .footer {
+    position: fixed;
+    top: 75%;
+    left: 39%;
+    column-gap: 130%;
+  }
+}
+
+@media (max-width: 696px) {
+  .triangle-fixed {
+    position: fixed;
+    top: -75%;
+    left: 110%;
+    transform: none;
+    z-index: 0;
+    scale: 0.8;
+    pointer-events: none;
+    transform: rotate(85deg);
+  }
+
+  .triangle-light-green {
+    position: absolute;
+    top: -10%;
+    left: 12%;
+    transform: rotate(35deg);
+  }
+
+  .triangle-green {
+    position: absolute;
+    top: -25%;
+    left: 15%;
+    transform: rotate(95deg);
+  }
+
+  .footer {
+    position: fixed;
+    top: 71%;
+    scale: 0.9;
+    left: 32%;
+    column-gap: 130%;
+  }
+
+  .OTP-container {
+    position: fixed;
+    top: 33%;
+    left: 33%;
+    transform: translate(-50%, -60%);
+    z-index: 1;
+    scale: 0.65;
+  }
+}
+
+@media (max-width: 541px) {
+  .triangle-fixed {
+    position: fixed;
+    top: -82%;
+    left: 130%;
+    transform: none;
+    z-index: 0;
+    scale: 0.8;
+    pointer-events: none;
+    transform: rotate(85deg);
+  }
+
+  .triangle-light-green {
+    position: absolute;
+    top: -10%;
+    left: 12%;
+    transform: rotate(35deg);
+  }
+
+  .triangle-green {
+    position: absolute;
+    top: -25%;
+    left: 15%;
+    transform: rotate(95deg);
+  }
+
+  .OTP-container {
+    position: fixed;
+    top: 30%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    scale: 0.62;
+  }
+
+  .footer {
+    position: fixed;
+    top: 72%;
+    left: 18%;
+    column-gap: 170%;
+    scale: 0.75;
+  }
+}
