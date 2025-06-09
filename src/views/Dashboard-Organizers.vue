@@ -30,15 +30,6 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/ActivityLogOrganizers">
-            <i class="bx bx-file report"></i>
-            <span class="nav-item" v-show="isSidebarOpen"
-              >Attendance Report</span
-            >
-          </router-link>
-        </li>
-
-        <li>
           <router-link to="SafetyProtocolsOrganizers">
             <i class="bx bxs-shield-plus"></i>
             <span class="nav-item" v-show="isSidebarOpen"
@@ -46,14 +37,7 @@
             >
           </router-link>
         </li>
-        <li>
-          <router-link to="/PostEvaluationAnalytics">
-            <i class="bx bx-bar-chart-alt-2"></i>
-            <span class="nav-item" v-show="isSidebarOpen"
-              >Post Evaluations</span
-            >
-          </router-link>
-        </li>
+
         <li @click="toggleNotifications">
           <a>
             <i class="bx bxs-bell"></i>
@@ -76,19 +60,31 @@
     :class="{ 'sidebar-collapsed': !isOpen }"
   >
     <div class="dropdown">
-      <button class="dropbtn" @click="toggleDropdown">Menu ▼</button>
-      <div class="dropdown-content" :class="{ active: showDropdown }">
-        <a @click="showQRCode = true">Show My QR Scanner</a>
-        <a @click="toggleCalendar">Calendar</a>
-      </div>
+      <button @click="showQRCode = true" class="icon-button">
+        <i class="bx bx-qr"></i>
+      </button>
+
+      <button
+        @click="openCalendarModal"
+        class="calendar-btn"
+        title="Open Calendar"
+      >
+        <i class="bx bx-calendar"></i>
+      </button>
     </div>
 
-    <input
-      v-model="searchQuery"
-      class="input-search-event"
-      type="search"
-      placeholder="Search event..."
-    />
+    <div class="search-input-container">
+      <input
+        v-model="searchQuery"
+        class="input-search-event"
+        type="search"
+        placeholder="Search event..."
+      />
+
+      <div class="live-time">
+        {{ currentTime }}
+      </div>
+    </div>
   </div>
 
   <hr
@@ -177,18 +173,6 @@
         <h3>Event Calendar</h3>
         <button class="close-btn" @click="calendarVisible = false">✕</button>
       </div>
-      <vue-cal
-        style="height: 500px"
-        :events="calendarEvents"
-        @cell-click="onDateClick"
-        @event-click="onEventClick"
-        :disable-views="['years', 'year']"
-        :time-from="5 * 60"
-        :time-to="22 * 60"
-        :time-step="30"
-        :snap-to-time="30"
-        :show-all-day-events="false"
-      />
     </div>
   </div>
 
@@ -229,18 +213,39 @@
         />
       </div>
       <div class="glasscard-titles">
-        <h1 class="volunteer-name">Hello, Ridley!</h1>
+        <h1 class="volunteer-name">Hello, {{ firstName }}!</h1>
         <h6 class="service-type">Organizer</h6>
       </div>
     </div>
 
     <div class="glasscard-container-1">
       <div class="picture-1">
-        <img src="/public/Profile.jpg" alt="weather" class="picture-person" />
+        <img
+          v-if="weather.icon"
+          :src="`http://openweathermap.org/img/wn/${weather.icon}@2x.png`"
+          :alt="weather.description"
+          class="weather-icon"
+        />
+        <img
+          v-else
+          src="/public/Profile.jpg"
+          alt="weather"
+          class="picture-person"
+        />
       </div>
       <div class="glasscard-titles">
-        <h1 class="volunteer-name">Mon, Mar 27, 2025</h1>
-        <h6 class="service-type">40 °C</h6>
+        <h1 class="volunteer-name">
+          {{
+            new Date().toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          }}
+        </h1>
+        <h6 class="service-type">{{ weather.temperature }}°C</h6>
+        <p class="weather-description">{{ weather.description }}</p>
       </div>
     </div>
   </div>
@@ -303,11 +308,33 @@
             </h6>
           </div>
           <div class="button">
-            <router-link to="/AnalyticsOrganizers" class="button-enter"
-              >Enter</router-link
+            <router-link
+              :to="`/AnalyticsOrganizers/${event.id}`"
+              class="button-enter"
             >
+              Enter
+            </router-link>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar Modal -->
+  <div
+    v-if="showCalendarModal"
+    class="calendar-modal-overlay"
+    @click="closeCalendarModal"
+  >
+    <div class="calendar-modal" @click.stop>
+      <div class="calendar-modal-header">
+        <h2>Event Calendar</h2>
+        <button @click="closeCalendarModal" class="close-calendar-btn">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="calendar-modal-content">
+        <CustomCalendar />
       </div>
     </div>
   </div>
@@ -321,8 +348,16 @@ import VueCal from "vue-cal";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import { authService, qrService, eventService, notificationService, formatEventForCalendar } from "@/api/services";
+import {
+  authService,
+  qrService,
+  eventService,
+  notificationService,
+  formatEventForCalendar,
+} from "@/api/services";
 import NotificationPanel from "@/components/NotificationPanel.vue"; // Import the notification component
+import CustomCalendar from "@/components/CustomCalendar.vue"; // Import the calendar component
+import axios from "axios";
 
 export default {
   name: "safety",
@@ -331,6 +366,7 @@ export default {
     VueCal,
     QrcodeStream,
     NotificationPanel, // Register the component
+    CustomCalendar, // Register the calendar component
   },
   setup() {
     const router = useRouter();
@@ -351,11 +387,19 @@ export default {
     const selectedEvent = ref(null);
     const showQRCode = ref(false);
     const useManualInput = ref(false);
+    const showCalendarModal = ref(false);
     const notifications = ref([]);
     const notificationLoading = ref(false);
     const unreadCount = ref(0);
     const events = ref([]);
     const allEvents = ref([]); // For calendar display - all events regardless of organizer
+    const weather = ref({
+      temperature: "",
+      description: "",
+      icon: "",
+    });
+    const firstName = ref("");
+    const currentTime = ref("");
 
     // Only show ongoing events in the QR scanner dropdown
     const ongoingEvents = computed(() =>
@@ -402,7 +446,9 @@ export default {
     const fetchNotifications = async () => {
       try {
         notificationLoading.value = true;
-        console.log("🔔 fetchNotifications called - starting notification fetch");
+        console.log(
+          "🔔 fetchNotifications called - starting notification fetch"
+        );
 
         // Test if notificationService exists
         if (!notificationService) {
@@ -410,14 +456,20 @@ export default {
           return;
         }
 
-        console.log("✅ notificationService exists, calling getNotifications()");
+        console.log(
+          "✅ notificationService exists, calling getNotifications()"
+        );
         const response = await notificationService.getNotifications();
         console.log("✅ Notifications response received:", response);
 
         if (response && response.notifications) {
           notifications.value = response.notifications;
           unreadCount.value = response.unread_count || 0;
-          console.log("✅ Notifications loaded:", notifications.value.length, "notifications");
+          console.log(
+            "✅ Notifications loaded:",
+            notifications.value.length,
+            "notifications"
+          );
           console.log("✅ Unread count:", unreadCount.value);
         } else {
           console.error("❌ Invalid response structure:", response);
@@ -437,6 +489,71 @@ export default {
       }
     };
 
+    // Fetch user data
+    const fetchUserData = async () => {
+      try {
+        const userData = await authService.getUser();
+        console.log("🔍 User data from authService:", userData);
+        console.log("🔍 Available fields:", Object.keys(userData));
+
+        // Try different possible field names
+        const possibleNames = [
+          userData.first_name,
+          userData.firstName,
+          userData.name,
+          userData.full_name,
+          // Extract first name from full_name if available
+          userData.full_name?.split(" ")[0],
+          // Extract first name from email if needed
+          userData.email?.split("@")[0],
+        ];
+
+        console.log("🔍 Possible name values:", possibleNames);
+
+        // Use the first non-undefined value
+        firstName.value =
+          possibleNames.find((name) => name !== undefined) || "User";
+
+        console.log("✅ User data loaded:", firstName.value);
+      } catch (error) {
+        console.error("❌ Error fetching user data:", error);
+        console.error("❌ Error details:", error.response?.data);
+        firstName.value = "User"; // Fallback name
+      }
+    };
+
+    // Fetch weather data
+    const fetchWeather = async () => {
+      try {
+        // Replace with your actual API key
+        const API_KEY = "476431119c6012c1e8cb59bb59fb3668";
+        const city = "Olongapo"; // Default city
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Weather API request failed");
+        }
+
+        const data = await response.json();
+
+        weather.value = {
+          temperature: Math.round(data.main.temp),
+          description: data.weather[0].description,
+          icon: data.weather[0].icon,
+        };
+      } catch (error) {
+        console.error("Error fetching weather:", error);
+        // Set default values if weather fetch fails
+        weather.value = {
+          temperature: "--",
+          description: "Weather unavailable",
+          icon: "",
+        };
+      }
+    };
+
     // Handle window resize for mobile detection
     const handleResize = () => {
       isMobile.value = window.innerWidth <= 928;
@@ -449,13 +566,23 @@ export default {
       fetchEvents();
       fetchAllEvents();
       fetchNotifications();
+      fetchUserData();
+      fetchWeather();
+      startTimeUpdates();
       handleResize();
-      window.addEventListener('resize', handleResize);
+      window.addEventListener("resize", handleResize);
+    });
+
+    onUnmounted(() => {
+      if (timeInterval) {
+        clearInterval(timeInterval);
+      }
+      window.removeEventListener("resize", handleResize);
     });
 
     // Clean up event listener
     onUnmounted(() => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     });
 
     const filteredEvents = computed(() => {
@@ -483,14 +610,14 @@ export default {
     const calendarEvents = computed(() => {
       console.log("Computing calendar events from:", allEvents.value);
       const transformed = allEvents.value
-        .map(event => {
+        .map((event) => {
           const formatted = formatEventForCalendar(event);
           if (!formatted) {
             console.warn("Failed to format event:", event);
           }
           return formatted;
         })
-        .filter(event => event !== null);
+        .filter((event) => event !== null);
 
       console.log("Transformed calendar events:", transformed);
       return transformed;
@@ -508,6 +635,35 @@ export default {
     const toggleCalendar = () => {
       calendarVisible.value = !calendarVisible.value;
       showDropdown.value = false;
+    };
+
+    const openCalendarModal = () => {
+      showCalendarModal.value = true;
+      showDropdown.value = false;
+    };
+
+    const closeCalendarModal = () => {
+      showCalendarModal.value = false;
+    };
+
+    // Update live time
+    const updateTime = () => {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      });
+      // Ensure there's exactly one space before AM/PM
+      currentTime.value = timeString.replace(/\s+/g, " ");
+    };
+
+    // Start time interval
+    let timeInterval;
+    const startTimeUpdates = () => {
+      updateTime(); // Initial update
+      timeInterval = setInterval(updateTime, 1000); // Update every second
     };
 
     const onDetect = async (result) => {
@@ -612,7 +768,9 @@ export default {
 
     const onEventClick = (event, e) => {
       // Find the original event data from the calendar event
-      const originalEvent = allEvents.value.find(evt => evt.event_title === event.title);
+      const originalEvent = allEvents.value.find(
+        (evt) => evt.event_title === event.title
+      );
       if (originalEvent) {
         selectedEvent.value = originalEvent;
         console.log("Selected event:", originalEvent);
@@ -685,7 +843,9 @@ export default {
       try {
         await notificationService.markAsRead(notificationId);
         // Update local state
-        const notification = notifications.value.find(n => n.id === notificationId);
+        const notification = notifications.value.find(
+          (n) => n.id === notificationId
+        );
         if (notification && !notification.read) {
           notification.read = true;
           unreadCount.value = Math.max(0, unreadCount.value - 1);
@@ -699,7 +859,7 @@ export default {
       try {
         await notificationService.markAllAsRead();
         // Update local state
-        notifications.value.forEach(notification => {
+        notifications.value.forEach((notification) => {
           notification.read = true;
         });
         unreadCount.value = 0;
@@ -712,7 +872,9 @@ export default {
       try {
         await notificationService.deleteNotification(notificationId);
         // Remove from local state
-        const index = notifications.value.findIndex(n => n.id === notificationId);
+        const index = notifications.value.findIndex(
+          (n) => n.id === notificationId
+        );
         if (index !== -1) {
           const notification = notifications.value[index];
           if (!notification.read) {
@@ -769,6 +931,12 @@ export default {
       fetchAllEvents,
       fetchNotifications,
       handleResize,
+      weather,
+      firstName,
+      showCalendarModal,
+      openCalendarModal,
+      closeCalendarModal,
+      currentTime,
     };
   },
 };
@@ -1042,5 +1210,236 @@ export default {
   text-align: center;
   color: #666;
   font-style: italic;
+}
+
+/* Weather styling */
+.weather-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.weather-description {
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 5px;
+  text-transform: capitalize;
+}
+
+/* Simple Border Container */
+.search-input-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 500px;
+}
+
+/* Modern Clean Live Time */
+.live-time {
+  background: transparent;
+  color: #435739;
+  padding: 14px 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: none;
+  min-width: 130px;
+  text-align: left;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Gradient Border Search Input */
+.input-search-event {
+  width: 300px;
+  max-width: 300px;
+  height: 46px;
+  padding: 0 18px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #e2e8f0, #cbd5e1) border-box;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-search-event::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.input-search-event:focus {
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #435739, #6b8a4f) border-box;
+}
+
+.input-search-event:hover:not(:focus) {
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #94a3b8, #cbd5e1) border-box;
+}
+
+/* Gradient Border Calendar Button */
+.calendar-btn {
+  background-color: #435739;
+  color: #f2f4ec;
+  border: 2px solid transparent;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 18px;
+}
+
+.calendar-btn:hover {
+  background-color: #f2f4ec;
+  color: #435739;
+  border: 2px solid #435739;
+  transform: translateY(-1px);
+}
+
+.calendar-btn:active {
+  transform: translateY(0);
+}
+
+/* Simple Calendar Modal */
+.calendar-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.calendar-modal {
+  background: #f2f4ec;
+  border-radius: 16px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calendar-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  color: black;
+}
+
+.calendar-modal-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.close-calendar-btn {
+  background: rgba(27, 27, 27, 0.1);
+  border: none;
+  color: black;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 18px;
+}
+
+.close-calendar-btn:hover {
+  background: rgba(175, 175, 175, 0.2);
+}
+
+.calendar-modal-content {
+  padding: 20px;
+  max-height: calc(80vh - 80px);
+  overflow-y: auto;
+}
+
+/* Responsive Gradient Design */
+@media (max-width: 768px) {
+  .search-input-container {
+    gap: 15px;
+    max-width: 400px;
+  }
+
+  .live-time {
+    padding: 12px 16px;
+    font-size: 12px;
+    min-width: 100px;
+  }
+
+  .input-search-event {
+    width: 220px;
+    max-width: 220px;
+    height: 44px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input-container {
+    max-width: 320px;
+    gap: 8px;
+  }
+
+  .live-time {
+    padding: 8px 12px;
+    font-size: 11px;
+    min-width: 90px;
+  }
+
+  .input-search-event {
+    width: 160px;
+    max-width: 160px;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
 }
 </style>

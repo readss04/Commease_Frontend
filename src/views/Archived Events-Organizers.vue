@@ -32,14 +32,6 @@
               >
             </router-link>
           </li>
-          <li>
-            <router-link to="/ActivityLogOrganizers">
-              <i class="bx bx-file report"></i>
-              <span class="nav-item" v-show="isSidebarOpen"
-                >Attendance Report</span
-              >
-            </router-link>
-          </li>
 
           <li>
             <router-link to="SafetyProtocolsOrganizers">
@@ -513,16 +505,13 @@ export default {
   margin-bottom: 5px;
 }
 
-.archived-event-participants span {
-  font-weight: 600;
-}
-
 /* Action buttons container */
 .archived-event-actions {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-top: 10px;
+  margin-right: 10px;
 }
 
 /* Enter Analytics Button */
@@ -564,13 +553,10 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 8px;
-  border-radius: 50%;
 }
 
 #delete-button:hover {
   color: #dc3545;
-  background: rgba(220, 53, 69, 0.1);
-  transform: scale(1.1);
 }
 
 /* Responsive design for action buttons */

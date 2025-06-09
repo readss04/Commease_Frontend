@@ -29,14 +29,6 @@
             <span class="nav-item" v-show="isSidebarOpen">Archived Events</span>
           </router-link>
         </li>
-        <li>
-          <router-link to="/ActivityLogOrganizers">
-            <i class="bx bx-file report"></i>
-            <span class="nav-item" v-show="isSidebarOpen"
-              >Attendance Report</span
-            >
-          </router-link>
-        </li>
 
         <li>
           <router-link to="SafetyProtocolsOrganizers">
@@ -46,14 +38,7 @@
             >
           </router-link>
         </li>
-        <li>
-          <router-link to="/PostEvaluationAnalytics">
-            <i class="bx bx-bar-chart-alt-2"></i>
-            <span class="nav-item" v-show="isSidebarOpen"
-              >Post Evaluations</span
-            >
-          </router-link>
-        </li>
+
         <li @click="toggleNotifications">
           <a>
             <i class="bx bxs-bell"></i>
@@ -415,8 +400,6 @@ export default {
         this.isSidebarOpen = false;
       }
     },
-
-
 
     async confirmLogout() {
       try {
