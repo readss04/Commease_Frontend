@@ -69,6 +69,8 @@ export const authService = {
     try {
       await this.ensureCsrfToken();
       const response = await api.post("/auth/login", { email, password });
+      console.log("Login response:", response.data);
+      localStorage.setItem("token", response.data.token);
       return response.data;
     } catch (error) {
       console.error("Login failed:", error);

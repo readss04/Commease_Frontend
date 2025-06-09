@@ -94,7 +94,7 @@ const router = createRouter({
     {
       path: "/LoginVolunteers",
       name: "LoginVolunteers",
-      component: LoginVolunteers,
+      component: () => import("../views/Login-Volunteers.vue"),
     },
 
     {
