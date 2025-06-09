@@ -16,7 +16,7 @@ export const authService = {
   async ensureCsrfToken() {
     try {
       const response = await axios.get(
-        "https://commease-be-master-!pv6rd.laravel.cloud1qqa/sanctum/csrf-cookie",
+        "https://commease-be-master-!pv6rd.laravel.cloud/sanctum/csrf-cookie",
         {
           withCredentials: true,
         }
