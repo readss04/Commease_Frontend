@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create axios instance with default config
 export const api = axios.create({
-  baseURL: "https://commease-be-master-!pv6rd.laravel.cloud/api",
+  baseURL: "https://commease-be-master-lpv6rd.laravel.cloud/api",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     Accept: "application/json",
@@ -22,7 +22,7 @@ api.interceptors.request.use(async (config) => {
   if (!token) {
     // If no token exists, get a new one
     await axios.get(
-      "https://commease-be-master-!pv6rd.laravel.cloud/sanctum/csrf-cookie",
+      "https://commease-be-master-lpv6rd.laravel.cloud/sanctum/csrf-cookie",
       {
         withCredentials: true,
       }
@@ -50,7 +50,7 @@ api.interceptors.response.use(
       // If we get a 419, try to refresh the CSRF token
       return axios
         .get(
-          "https://commease-be-master-!pv6rd.laravel.cloud/sanctum/csrf-cookie",
+          "https://commease-be-master-lpv6rd.laravel.cloud/sanctum/csrf-cookie",
           {
             withCredentials: true,
           }

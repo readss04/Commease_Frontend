@@ -245,7 +245,7 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import VueCal from "vue-cal";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://commease-be-master-lpv6rd.laravel.cloud";
 
 const router = useRouter();
 
